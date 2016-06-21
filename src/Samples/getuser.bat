@@ -1,0 +1,1 @@
+..\msgraph user get --upn youruser@domain.com

@@ -14,7 +14,6 @@ namespace MSGraphCLI
         {
             var cb = new ConsoleBase("MSGraphTests.exe");
             cb.Run(args);
-            Console.WriteLine("Done!");
         }
     }
 }

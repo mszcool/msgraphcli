@@ -22,7 +22,12 @@ namespace MSGraphCLI.Commands
                            
 
         [ConsoleCommand("getapptoken")]
-        public static void GetAppToken(string tenantId, string clientId, string secretEnvVar, string resource)
+        public static void GetAppToken(
+            string tenantId, 
+            string clientId, 
+            string resource, 
+            string secretEnvVar = "MSGRAPHCLI_APPSECRET",
+            bool verbose = true)
         {
             // Validate Parameters and prepare some other variables needed
             var tenantAuthUrl = string.Format(AuthorityUrl, tenantId);
@@ -33,10 +38,13 @@ namespace MSGraphCLI.Commands
             }
 
             // Print some user state / info
-            Console.WriteLine($"Acquiring token via tenant '{tenantId}'!");
-            Console.WriteLine($"  with client ID {clientId}");
-            Console.WriteLine($"  via authority URL {tenantAuthUrl}");
-            Console.WriteLine($"  for resource {resource}");
+            if (verbose)
+            {
+                Console.WriteLine($"Acquiring token via tenant '{tenantId}'!");
+                Console.WriteLine($"  with client ID {clientId}");
+                Console.WriteLine($"  via authority URL {tenantAuthUrl}");
+                Console.WriteLine($"  for resource {resource}");
+            }
 
             // Start the authentication process with ADAL
             var authResult = default(AuthenticationResult);
@@ -45,12 +53,17 @@ namespace MSGraphCLI.Commands
             var credential = new ClientCredential(clientId, clientSecret);
             authResult = authContext.AcquireToken(resource, credential);
 
-            Console.WriteLine("-----");
-            Console.WriteLine($"Expires: {authResult.ExpiresOn.ToLocalTime()}");
+            if(verbose)
+            {
+                Console.WriteLine("-----");
+                Console.WriteLine($"Expires: {authResult.ExpiresOn.ToLocalTime()}");
+            }
             Console.WriteLine(authResult.CreateAuthorizationHeader());
-            Console.WriteLine("-----");
-            Console.WriteLine();
-
+            if (verbose)
+            {
+                Console.WriteLine("-----");
+                Console.WriteLine();
+            }
         }
     }
 }
